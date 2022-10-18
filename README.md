@@ -1,12 +1,26 @@
 # rlprofond
 
-## Infos importants
-- etc.
+## Important info
+- Dependencies are in `requirements.txt`
 
-## Comment utiliser ?
-### Tester la partie 1 
+## How to use it ?
+
+1. Create new virtual environment  
 ```
-python3 partie1.py
+python3 -m venv ./ venv
+```
+2. Activate the newly created env
+```
+source venv/bin/activate
+```
+3. Run the next command to test the first part of the lab
+```
+python3 partie.py
+```
+
+Finally, don't forget to deactivate the virtual environment after testing 
+```
+deactivate
 ```
 
 ## Travail de 
