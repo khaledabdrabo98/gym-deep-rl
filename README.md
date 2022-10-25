@@ -15,7 +15,7 @@ source venv/bin/activate
 ```
 3. Run the next command to test the first part of the lab
 ```
-python3 partie.py
+python3 partie1.py
 ```
 
 Finally, don't forget to deactivate the virtual environment after testing 
