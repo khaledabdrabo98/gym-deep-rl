@@ -55,18 +55,28 @@ def create_plot(title, values, n_episodes):
     plt.show()
 
 
-# MAIN
-env_id = "CartPole-v1"
-path_video = './episodes/random_agent/'
-plot_title = 'Random Strategy'
-n_episodes = 150
+def main():
+    env_id = "CartPole-v1"
+    n_episodes = 150
 
-# render_mode="human" -> visualize pygame window 
-env = gym.make(env_id, render_mode="rgb_array")
-env = RecordVideo(env, path_video, episode_trigger=lambda x: x % 25 == 0, name_prefix=format(env_id))
-env.action_space.seed(42)
+    # Random agent
+    # path_video = './episodes/random_agent/'
+    # plot_title = 'Random Strategy'
 
-print("Starting with", n_episodes, "episodes ...")
+    # Deep Q-Network agent
+    path_video = './episodes/dqn_agent/'
+    plot_title = 'Deep Q-Network Strategy'
 
-total = random_search(env, n_episodes)
-create_plot(plot_title, total, n_episodes)
+    # render_mode="human" -> visualize pygame window 
+    env = gym.make(env_id, render_mode="rgb_array")
+    # record one episode every 25 episodes
+    env = RecordVideo(env, path_video, episode_trigger=lambda x: x % 25 == 0, name_prefix=format(env_id))
+    # TODO : change seed ??
+    env.action_space.seed(42)
+
+    print("Starting with", n_episodes, "episodes ...")
+    total = random_search(env, n_episodes)
+    create_plot(plot_title, total, n_episodes)
+
+if __name__ == "__main__":
+    main()
