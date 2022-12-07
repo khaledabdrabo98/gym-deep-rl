@@ -5,3 +5,5 @@
 /lib64
 /share
 pyvenv.cfg
+__pycache__/
+episodes/random_agent/

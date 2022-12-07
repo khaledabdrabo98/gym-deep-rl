@@ -1,8 +1,9 @@
-# rlprofond
+# Deep Reinforcement Learning 
 
 ## Important info
 - Dependencies are in `requirements.txt`
 - Best performances (episodes recordings) are in `episodes/`
+- Pretrained model weights are in `pretrained_models/`
 
 ## How to use it ?
 
@@ -18,16 +19,30 @@ pip3 install -r requirements.txt
 ```
 source venv/bin/activate
 ```
-4. Run the next command to test the currently developped part of the lab (Random Agent)
+4. Test demo (with saved pretrained model weights and does not trigger episode recordings)
 ```
-python3 main.py
+python3 demo.py
 ```
+5. (Extra) Choose which agent you want to test (Notice: these commands will trigger the recording of episodes and will save the newly trained model weights)
+
+    1. Random Agent (episode recordings are in `episodes/random_agent`)
+        ```
+        python3 RandomAgent.py
+        ```
+    2. Deep Q-Linear Network Trained agent (episode recordings are in `episodes/dqn_agent`)
+        ```
+        python3 DQNAgent.py
+        ```
+    3. Deep Q-Convolutional Network Trained agent (episode recordings are in `episodes/dqcn_agent`)
+        ```
+        python3 DQCNAgent.py
+        ```
 
 Finally, don't forget to deactivate the virtual environment after testing 
 ```
 deactivate
 ```
 
-## Travail de 
+## Developed by 
 - Khaled ABDRABO p1713323 
 - Jean BRIGNONE p1709655
