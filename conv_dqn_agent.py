@@ -156,11 +156,7 @@ def main():
 
             if done:
                 total_rewards.append(total)
-                if total >= 400:
-                    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! epsiode",
-                          i, ":", total)
-                else:
-                    print("epsiode", i, ":", total, "(epsilon):",epsilon)
+                print("epsiode", i, ":", total)
                 episode_durations.append(t + 1)
                 plot_durations(episode_durations)
                 break
@@ -180,6 +176,9 @@ def main():
     env.close()
     torch.save(policy_net.state_dict(), save_model_path)
     create_plot(plot_title, total_rewards, N_EPISODES)
+    average_rewards = sum(total_rewards) / len(total_rewards)
+    print(average_rewards)
+    print(max(total_rewards))
 
 
 if __name__ == "__main__":

@@ -46,6 +46,9 @@ def main():
     print("Starting with", n_episodes, "episodes ...")
     total = random_search(env, n_episodes)
     create_plot(plot_title, total, n_episodes)
+    average_rewards = sum(total) / len(total)
+    print(average_rewards)
+    print(max(total))
 
 if __name__ == "__main__":
     main()

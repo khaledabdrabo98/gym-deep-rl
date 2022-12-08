@@ -118,8 +118,7 @@ def main():
             if total >= 500:
                 print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! episode: {}, total reward: {}".format(episode_counter, total))
             else:
-                print("episode: {}, total reward: {}, epsilon: {}".format(episode_counter, total, epsilon))
-            # print("Average replay time:", sum_total_replay_time/episode_counter)
+                print("episode: {}, total reward: {}".format(episode_counter, total))
         
 
     print('Training complete')
@@ -129,7 +128,9 @@ def main():
     # Save model
     torch.save(dqn.state_dict(), save_model_path)
     create_plot(plot_title, total_rewards, N_EPISODES)
-
+    average_rewards = sum(total_rewards) / len(total_rewards)
+    print(average_rewards)
+    print(max(total_rewards))
 
 if __name__ == "__main__":
     main()
