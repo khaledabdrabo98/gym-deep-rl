@@ -1,7 +1,7 @@
 import torch
 import copy
-from dqn import DQN
-from replay_memory import Experience
+from .dqn import DQN
+from .replay_memory import Experience
 
 
 # Implement a Target Network and Experince Replay into DQN class
