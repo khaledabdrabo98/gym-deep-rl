@@ -2,12 +2,13 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+
 # Deep Q Neural Network class
 class DQCN(torch.nn.Module):
-    def __init__(self, h, w, outputs, device):
+    def __init__(self, h, w, outputs, device, channels_in=3):
         super(DQCN, self).__init__() 
         self.device = device
-        self.conv1 = nn.Conv2d(3, 32, kernel_size=5, stride=2)
+        self.conv1 = nn.Conv2d(channels_in, 32, kernel_size=5, stride=2)
         self.bn1 = nn.BatchNorm2d(32)
         self.conv2 = nn.Conv2d(32, 32, kernel_size=5, stride=2)
         self.bn2 = nn.BatchNorm2d(32)
@@ -21,7 +22,7 @@ class DQCN(torch.nn.Module):
             return (size - (kernel_size - 1) - 1) // stride  + 1
         convw = conv2d_size_out(conv2d_size_out(conv2d_size_out(w)))
         convh = conv2d_size_out(conv2d_size_out(conv2d_size_out(h)))
-        linear_input_size = convw * convh * 32
+        linear_input_size = abs(convw * convh * 32)
         self.head = nn.Linear(linear_input_size, outputs)
 
     # Called with either one element to determine next action, or a batch

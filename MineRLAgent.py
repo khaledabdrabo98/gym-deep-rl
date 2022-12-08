@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import gym
-from gym.wrappers import RecordVideo
 import random
 from itertools import count
 
@@ -12,6 +11,7 @@ import environment
 
 from ReplayMemory import ReplayMemory, Experience
 from DQCN import DQCN
+from Wrappers import make_env
 from MyUtils import get_screen, create_plot, plot_durations
 
 
@@ -32,27 +32,29 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # save_model_path = './pretrained_models/minerl_model.pth'
 plot_title = 'Deep Q-Conv-Network MineRL'
 
-env = gym.make(ENV_NAME, render_mode='rgb_array')
+env = gym.make(ENV_NAME)
 # env = RecordVideo(env, path_video, episode_trigger=lambda x: x % 25 == 0, name_prefix=format(ENV_NAME))
-env.reset()
+# Wrap env with SkipFrame, GrayScaleObservation, and ResizeObservation (Wrappers)
+# env = make_env(env)
+# env.unwrapped.reset()
 
 NB_MAX_STEP = env.unwrapped.spec.max_episode_steps
 NOOP = None if not hasattr(env.action_space, 'noop') else env.action_space.noop()
 
-# Get screen size so that we can initialize layers correctly based on shape
-# returned from AI gym. Typical dimensions at this point are close to 3x40x90
-# which is the result of a clamped and down-scaled render buffer in get_screen()
-init_screen = get_screen(env)
-_, _, screen_height, screen_width = init_screen.shape
+print(env.observation_space['pov'].shape)
+n_channels, height, width  = env.observation_space['pov'].shape
 
-print("screen_width", screen_width)
-print("screen_height", screen_height)
+print("width", width)
+print("height", height)
+print("n_channels", n_channels)
 
 # Get number of actions from gym action space
-n_actions = env.action_space.n
+n_actions = len(env.action_space) # 3
 
-policy_net = DQCN(screen_height, screen_width, n_actions, device).to(device)
-target_net = DQCN(screen_height, screen_width, n_actions, device).to(device)
+print("n_actions", n_actions)
+
+policy_net = DQCN(height, width, n_actions, device, n_channels).to(device)
+target_net = DQCN(height, width, n_actions, device, n_channels).to(device)
 target_net.load_state_dict(policy_net.state_dict())
 target_net.eval()
 
@@ -137,27 +139,28 @@ def main():
 
     for i in range(N_EPISODES):
         # Initialize the environment and state
-        env.reset()
-        last_screen = get_screen(env)
-        current_screen = get_screen(env)
-        state = current_screen - last_screen
+        state = env.unwrapped.reset()
+        state = state['pov']
+        state = torch.from_numpy(state.copy())
         total = 0
 
         for step in range(NB_MAX_STEP):
             # Select and perform an action
             action = select_action(state, epsilon)
-            # TODO Python dict : NOOP and then action 
 
-            _, reward, done, _, _ = env.step(action.item())
+            # TODO Python dict : NOOP and then action 
+            custom_action = env.action_space.noop()
+            custom_action[action.item()] = 1
+            print("custom_action", custom_action)
+            
+            next_state, reward, done, _, _ = env.step(custom_action)
             total += reward
             reward = torch.tensor([reward], device=device)
 
             # Observe new state
-            last_screen = current_screen
-            current_screen = get_screen(env)
-            if not done:
-                next_state = current_screen - last_screen
-            else:
+            next_state = next_state['pov']
+            next_state = torch.from_numpy(next_state.copy())
+            if done:
                 next_state = None
 
             # Store the experience in memory
@@ -168,14 +171,9 @@ def main():
 
             if done:
                 total_rewards.append(total)
-                # if total >= 400:
-                #     print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! epsiode",
-                #           i, ":", total)
-                # else:
-                # print('Episode {:3}  |  Step {:4}  |  Reward {:2}'.format(episode, step, reward))
                 print("epsiode", i, ":", total, "(epsilon):",epsilon)
                 episode_durations.append(step + 1)
-                plot_durations(episode_durations)
+                # plot_durations(episode_durations)
                 break
 
             # Perform one step of the optimization (on the policy network)
@@ -191,9 +189,9 @@ def main():
     print('Training complete')
     # env.render()
     env.close()
+    print(total_rewards)
     # torch.save(policy_net.state_dict(), save_model_path)
-    create_plot(plot_title, total_rewards, N_EPISODES)
-
+    # create_plot(plot_title, total_rewards, N_EPISODES)
 
 if __name__ == "__main__":
     main()
