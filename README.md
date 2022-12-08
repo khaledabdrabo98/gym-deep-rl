@@ -27,19 +27,19 @@ python3 demo.py
 
     1. Random Agent (episode recordings are in `episodes/random_agent`)
         ```
-        python3 RandomAgent.py
+        python3 random_agent.py
         ```
-    2. Deep Q-Linear Network CartPole agent (episode recordings are in `episodes/dqn_agent`)
+    2. Deep Q-Network CartPole agent (episode recordings are in `episodes/dqn_agent`)
         ```
-        python3 DQNAgent.py
+        python3 dqn_agent.py
         ```
-    3. Deep Q-Convolutional Network CartPole agent (episode recordings are in `episodes/dqcn_agent`)
+    3. Deep Q-Convolutional Network CartPole agent (episode recordings are in `episodes/conv_dqn_agent`)
         ```
-        python3 DQCNAgent.py
+        python3 conv_dqn_agent.py
         ```
-    4. Deep Q-Convolutional Network MineLine agent 
+    4. Deep Q-Convolutional Network MineRL agent 
         ```
-        python3 MineRLAgent.py
+        python3 minerl_agent.py
         ```
 
 Finally, don't forget to deactivate the virtual environment after testing 

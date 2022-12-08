@@ -1,7 +1,6 @@
 import torch
 import gym
-from DoubleDQN import DoubleDQN
-from random import seed
+from src.double_dqn import DoubleDQN
 
 ENV_NAME = 'CartPole-v1'
 HIDDEN_DIM = 64
